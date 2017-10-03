@@ -31,9 +31,11 @@
     <action id="NewDiffAction" icon="/icons/new-diff.png" class="NewDiffAction" text="New diff" description="Create new diff with template">
       <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
     </action>
-
     <action id="UpdateDiffAction" icon="/icons/update-diff.png" class="UpdateDiffNameAction" text="Update diff name" description="Update diff name (date, user, task)">
       <add-to-group group-id="CutCopyPasteGroup" anchor="last"/>
+    </action>
+    <action id="CopyDiffPathAction" class="CopyDiffPathAction" text="Copy Diff Path" description="Copy Diff Path">
+        <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="CopyPaths"/>
     </action>
   </actions>
 
