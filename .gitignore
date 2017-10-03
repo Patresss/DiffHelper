@@ -1,0 +1,12 @@
+tmp/
+*.log
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+log/
+target/
+*.class
+!.mvn/wrapper/maven-wrapper.jar
