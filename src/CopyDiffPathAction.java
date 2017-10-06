@@ -1,31 +1,40 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.ide.CopyPasteManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.WindowManager;
+import com.intellij.openapi.wm.ex.StatusBarEx;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
 public class CopyDiffPathAction extends AnAction {
 
-    private final static String DIFF_FOLDER = "DIFF/";
+    private final static String DIFF_FOLDER = "DIFFS/";
 
     @Override
     public void actionPerformed(AnActionEvent e) {
         VirtualFile virtualFile = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
         isValidateFile(virtualFile);
-        copyToClipboard(virtualFile);
+        String copiedPath = copyToClipboard(virtualFile);
+        setStatusBarText(e.getProject(), "'" + copiedPath + "' has been copied");
     }
 
-    private void copyToClipboard(VirtualFile virtualFile) {
-        String[] split = virtualFile.getCanonicalPath().split(DIFF_FOLDER);
-        if(split.length >= 1) {
-            String path = split[1];
-            StringSelection stringSelection = new StringSelection(path);
-            Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clpbrd.setContents(stringSelection, null);
+    private void setStatusBarText(Project project, String message) {
+        if (project != null) {
+            final StatusBarEx statusBar = (StatusBarEx) WindowManager.getInstance().getStatusBar(project);
+            if (statusBar != null) {
+                statusBar.setInfo(message);
+            }
         }
+    }
+
+    private String copyToClipboard(VirtualFile virtualFile) {
+        String canonicalPath = virtualFile.getCanonicalPath();
+        String path = canonicalPath.substring(canonicalPath.lastIndexOf(DIFF_FOLDER) + DIFF_FOLDER.length());
+        CopyPasteManager.getInstance().setContents(new StringSelection(path));
+        return path;
     }
 
     @Override

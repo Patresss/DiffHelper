@@ -1,14 +1,13 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.refactoring.rename.RenameProcessor;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 public class UpdateDiffNameAction extends AnAction {
@@ -20,11 +19,7 @@ public class UpdateDiffNameAction extends AnAction {
         Project project = e.getProject();
         VirtualFile virtualFile = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
         if (isValidateFile(virtualFile)) {
-            try {
-                renameFile(project, virtualFile);
-            } catch (IOException ioe) {
-                throw new RuntimeException(ioe);
-            }
+            renameFile(project, virtualFile);
         } else {
             Messages.showMessageDialog(project, "File does not matches to pattern " + PATTERN.pattern(), "File Exists", Messages.getWarningIcon());
         }
@@ -40,30 +35,18 @@ public class UpdateDiffNameAction extends AnAction {
         return virtualFile != null && !virtualFile.isDirectory() && PATTERN.matcher(virtualFile.getName()).matches();
     }
 
-    private void renameFile(Project project, VirtualFile virtualFile) throws IOException {
+    private void renameFile(Project project, VirtualFile virtualFile) {
         String newName = DiffNameUtils.getFileName(project);
-        if(!virtualFile.getName().equals(newName)) {
-            if(virtualFile.getParent() != null && virtualFile.getParent().getCanonicalPath() != null) {
-                Path newPath = Paths.get(virtualFile.getParent().getCanonicalPath(), newName);
-                if(newPath.toFile().exists()) {
-                    Messages.showMessageDialog(project, "File with name " +  newName + " exists in folder", "File Exists", Messages.getWarningIcon());
-                } else {
-                    runRenameThread(virtualFile, newName);
-                }
+        if (!virtualFile.getName().equals(newName)) {
+            if (virtualFile.getParent() != null && virtualFile.getParent().getCanonicalPath() != null) {
+                PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
+                RenameProcessor renameProcessor = new RenameProcessor(project, file, newName, false, false);
+                renameProcessor.doRun();
             } else {
                 throw new RuntimeException("Error with file");
             }
         }
     }
 
-    private void runRenameThread(VirtualFile virtualFile, String newName) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            try {
-                virtualFile.rename(null, newName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
 
 }

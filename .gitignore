@@ -1,7 +1,6 @@
 tmp/
 *.log
 .idea/
-*.iml
 *.iws
 *.ipr
 *.ids
