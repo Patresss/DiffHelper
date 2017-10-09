@@ -1,12 +1,15 @@
 <idea-plugin>
   <id>com.patres.diff</id>
   <name>Diff helper</name>
-  <version>1.0</version>
-  <vendor email="patryk.piechaczek@gmail.com">Patres</vendor>
+  <version>1.1</version>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      The plugin adds 3 actions:<br>
+      <ul>
+        <li>New named Diff</li>
+        <li>Update Diff time</li>
+        <li>Copy Diff Path</li>
+      </ul>
     ]]></description>
 
   <change-notes><![CDATA[
@@ -24,19 +27,24 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
+    <projectConfigurable groupId="tools" displayName="Diff Helper Plugin" id="preferences.DiffHelperConfigurable" instance="com.patres.idea.diff.DiffHelperConfigurable" />
+    <projectService serviceInterface="com.patres.idea.diff.DiffHelperConfig" serviceImplementation="com.patres.idea.diff.DiffHelperConfig"/>
   </extensions>
+
 
   <actions>
     <!-- Add your actions here -->
-    <action id="NewDiffAction" icon="/icons/new-diff.png" class="NewDiffAction" text="New diff" description="Create new diff with template">
+    <action id="NewDiffAction" icon="/icons/new-diff.png" class="com.patres.idea.diff.action.NewDiffAction" text="Named diff" description="Create new diff with template">
       <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewFile"/>
     </action>
-    <action id="UpdateDiffAction" icon="/icons/update-diff.png" class="UpdateDiffNameAction" text="Update diff name" description="Update diff name (date, user, task)">
+    <action id="UpdateDiffAction" icon="/icons/update-diff.png" class="com.patres.idea.diff.action.UpdateDiffNameAction" text="Update Diff time" description="Update diff date and time">
       <add-to-group group-id="CutCopyPasteGroup" anchor="last"/>
     </action>
-    <action id="CopyDiffPathAction" class="CopyDiffPathAction" text="Copy Diff Path" description="Copy Diff Path">
+    <action id="CopyDiffPathAction" class="com.patres.idea.diff.action.CopyDiffPathAction" text="Copy Diff Path" description="Copy Diff Path">
         <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="CopyPaths"/>
     </action>
   </actions>
 
+  <application-components>
+  </application-components>
 </idea-plugin>

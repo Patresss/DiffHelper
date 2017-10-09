@@ -1,3 +1,5 @@
+package com.patres.idea.diff.action;
+
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
@@ -9,6 +11,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import com.patres.idea.diff.DiffHelperBundle;
+import com.patres.idea.diff.utils.DiffNameUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +39,7 @@ public class NewDiffAction extends AnAction {
             updateFileTemplate(project);
             VirtualFile virtualFile = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
             virtualFile = getFile(virtualFile);
-            copyTemplate(project, virtualFile);
+            createDiff(project, virtualFile);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -49,12 +53,12 @@ public class NewDiffAction extends AnAction {
         }
     }
 
-    private void copyTemplate(Project project, VirtualFile virtualFile) {
+    private void createDiff(Project project, VirtualFile virtualFile) {
         validVirtualFile(virtualFile);
         String fileName = DiffNameUtils.getFileName(project);
         Path targetPath = Paths.get(virtualFile.getCanonicalPath(), fileName);
         if (targetPath.toFile().exists()) {
-            Messages.showMessageDialog(project, "File " + targetPath.toString() + " exists in folder", "File Exists", Messages.getWarningIcon());
+            Messages.showMessageDialog(project, DiffHelperBundle.message("error.fileExistsPath", targetPath.toString()), DiffHelperBundle.message("error.fileExists"), Messages.getWarningIcon());
         } else {
             PsiDirectory directory = PsiManager.getInstance(project).findDirectory(virtualFile);
             CreateFileFromTemplateAction.createFileFromTemplate(fileName, diffTemplate, directory, "", true);
@@ -63,7 +67,7 @@ public class NewDiffAction extends AnAction {
 
     private void validVirtualFile(VirtualFile virtualFile) throws IllegalArgumentException {
         if (virtualFile == null || virtualFile.getCanonicalPath() == null) {
-            throw new IllegalArgumentException("Cannot find directory path");
+            throw new IllegalArgumentException(DiffHelperBundle.message("error.directoryNotFound"));
         }
     }
 

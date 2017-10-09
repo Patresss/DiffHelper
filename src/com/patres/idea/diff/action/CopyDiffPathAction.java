@@ -1,3 +1,5 @@
+package com.patres.idea.diff.action;
+
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -6,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
+import com.patres.idea.diff.DiffHelperBundle;
 
 import java.awt.datatransfer.StringSelection;
 
@@ -18,7 +21,7 @@ public class CopyDiffPathAction extends AnAction {
         VirtualFile virtualFile = e.getDataContext().getData(PlatformDataKeys.VIRTUAL_FILE);
         isValidateFile(virtualFile);
         String copiedPath = copyToClipboard(virtualFile);
-        setStatusBarText(e.getProject(), "'" + copiedPath + "' has been copied");
+        setStatusBarText(e.getProject(), DiffHelperBundle.message("action.copiedPath", copiedPath));
     }
 
     private void setStatusBarText(Project project, String message) {

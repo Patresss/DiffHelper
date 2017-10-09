@@ -1,3 +1,5 @@
+package com.patres.idea.diff.action;
+
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -7,12 +9,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.refactoring.rename.RenameProcessor;
+import com.patres.idea.diff.DiffHelperBundle;
+import com.patres.idea.diff.utils.DiffNameUtils;
 
 import java.util.regex.Pattern;
 
 public class UpdateDiffNameAction extends AnAction {
 
     private final static Pattern PATTERN = Pattern.compile("^[0-9]{12}_.*_.*\\.sql$");
+    private final static int NUMBER_OF_DIGITS = 12;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -21,7 +26,7 @@ public class UpdateDiffNameAction extends AnAction {
         if (isValidateFile(virtualFile)) {
             renameFile(project, virtualFile);
         } else {
-            Messages.showMessageDialog(project, "File does not matches to pattern " + PATTERN.pattern(), "File Exists", Messages.getWarningIcon());
+            Messages.showMessageDialog(project, DiffHelperBundle.message("error.notMatchToPattern", PATTERN.pattern()), DiffHelperBundle.message("error.title"), Messages.getWarningIcon());
         }
     }
 
@@ -36,7 +41,8 @@ public class UpdateDiffNameAction extends AnAction {
     }
 
     private void renameFile(Project project, VirtualFile virtualFile) {
-        String newName = DiffNameUtils.getFileName(project);
+        String oldName = virtualFile.getName();
+        String newName = DiffNameUtils.getFormattedDataTime() + oldName.substring(NUMBER_OF_DIGITS);
         if (!virtualFile.getName().equals(newName)) {
             if (virtualFile.getParent() != null && virtualFile.getParent().getCanonicalPath() != null) {
                 PsiFile file = PsiManager.getInstance(project).findFile(virtualFile);
