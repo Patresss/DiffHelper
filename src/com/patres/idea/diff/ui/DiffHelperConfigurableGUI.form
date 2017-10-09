@@ -30,7 +30,7 @@
             <properties>
               <actionCommand resource-bundle="DiffHelperBundle" key="action.taskName.checkBox"/>
               <hideActionText value="true"/>
-              <text value="Get the task name from the change list"/>
+              <text resource-bundle="DiffHelperBundle" key="action.taskName.checkBox"/>
             </properties>
           </component>
           <hspacer id="39ce8">
@@ -62,7 +62,7 @@
             <properties>
               <actionCommand resource-bundle="DiffHelperBundle" key="action.nickName.checkBox"/>
               <hideActionText value="false"/>
-              <text value="Get the nick name from git"/>
+              <text resource-bundle="DiffHelperBundle" key="action.nickName.checkBox"/>
             </properties>
           </component>
           <hspacer id="c0231">
