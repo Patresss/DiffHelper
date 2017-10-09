@@ -64,7 +64,4 @@ public class DiffHelperConfig implements PersistentStateComponent<DiffHelperConf
         this.nickNameFromGit = nickNameFromGit;
     }
 
-    public String getTaskName(Project project) {
-        return taskNameFromChangelistCheck ? DiffNameUtils.getTicket(project) : nickNameFromGit; //TODO
-    }
 }
