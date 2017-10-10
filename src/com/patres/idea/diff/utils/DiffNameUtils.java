@@ -21,14 +21,18 @@ public class DiffNameUtils {
     }
 
     public static String getFileName(Project project) {
-        String nick = DiffHelperConfig.getInstance(project).getNickNameFromGit();
-        return String.format("%s_%s_%s.sql", getFormattedDataTime(), nick, getTicket(project));
+        return String.format("%s_%s_%s.sql", getFormattedDataTime(), getNick(project), getTicket(project));
     }
 
     public static String getFormattedDataTime() {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(FORMAT_DATE);
         return date.format(formatter);
+    }
+
+
+    public static String getNick(Project project) {
+        return DiffHelperConfig.getInstance(project).isNickNameFromGitCheck() ? getGitUsername() : DiffHelperConfig.getInstance(project).getNickNameFromGit();
     }
 
     public static String getGitUsername() {
