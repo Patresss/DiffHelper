@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
 import com.patres.idea.diff.DiffHelperBundle;
+import com.patres.idea.diff.DiffHelperConfig;
 import com.patres.idea.diff.utils.DiffNameUtils;
 
 import java.io.IOException;
@@ -55,14 +56,27 @@ public class NewDiffAction extends AnAction {
 
     private void createDiff(Project project, VirtualFile virtualFile) {
         validVirtualFile(virtualFile);
-        String fileName = DiffNameUtils.getFileName(project);
-        Path targetPath = Paths.get(virtualFile.getCanonicalPath(), fileName);
-        if (targetPath.toFile().exists()) {
-            Messages.showMessageDialog(project, DiffHelperBundle.message("error.fileExistsPath", targetPath.toString()), DiffHelperBundle.message("error.fileExists"), Messages.getWarningIcon());
-        } else {
-            PsiDirectory directory = PsiManager.getInstance(project).findDirectory(virtualFile);
-            CreateFileFromTemplateAction.createFileFromTemplate(fileName, diffTemplate, directory, "", true);
+        String taskName = getTaskName(project);
+        if(taskName != null && !taskName.isEmpty()) {
+            String fileName = DiffNameUtils.getFileName(project, taskName);
+            Path targetPath = Paths.get(virtualFile.getCanonicalPath(), fileName);
+            if (targetPath.toFile().exists()) {
+                Messages.showMessageDialog(project, DiffHelperBundle.message("error.fileExistsPath", targetPath.toString()), DiffHelperBundle.message("error.fileExists"), Messages.getWarningIcon());
+            } else {
+                PsiDirectory directory = PsiManager.getInstance(project).findDirectory(virtualFile);
+                CreateFileFromTemplateAction.createFileFromTemplate(fileName, diffTemplate, directory, "", true);
+            }
         }
+    }
+
+    private String getTaskName(Project project) {
+        String taskName;
+        if(DiffHelperConfig.getInstance(project).isTaskNameFromChangelistCheck()) {
+            taskName = DiffNameUtils.getTicketFromChangelist(project);
+        } else {
+            taskName = DiffNameUtils.getTicketFromInput(project);
+        }
+        return taskName;
     }
 
     private void validVirtualFile(VirtualFile virtualFile) throws IllegalArgumentException {

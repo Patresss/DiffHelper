@@ -1,10 +1,12 @@
 package com.patres.idea.diff.utils;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.patres.idea.diff.DiffHelperBundle;
 import com.patres.idea.diff.DiffHelperConfig;
+import com.patres.idea.diff.NotEmptyValidator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,12 +18,14 @@ public class DiffNameUtils {
     private final static String DEFAULT_USER = "Unknown-user";
     private final static String DEFAULT_TASK = "BM-NULL";
     private final static String FORMAT_DATE = "yyyyMMddHHmm";
+    private final static InputValidator INPUT_VALIDATOR = new NotEmptyValidator();
+
 
     private DiffNameUtils() {
     }
 
-    public static String getFileName(Project project) {
-        return String.format("%s_%s_%s.sql", getFormattedDataTime(), getNick(project), getTicket(project));
+    public static String getFileName(Project project, String taskName) {
+        return String.format("%s_%s_%s.sql", getFormattedDataTime(), getNick(project), taskName);
     }
 
     public static String getFormattedDataTime() {
@@ -46,13 +50,12 @@ public class DiffNameUtils {
         }
     }
 
-    public static String getTicket(Project project) {
+    public static String getTicketFromInput(Project project) {
         String defaultListName = ChangeListManager.getInstance(project).getDefaultListName();
-        if(DiffHelperConfig.getInstance(project).isTaskNameFromChangelistCheck()) {
-            return defaultListName;
-        } else {
-            String inputDialog = Messages.showInputDialog(DiffHelperBundle.message("action.taskName"), DiffHelperBundle.message("action.createNewDiff"), Messages.getQuestionIcon(), defaultListName, null);
-            return inputDialog == null || inputDialog.isEmpty() ? DEFAULT_TASK  : inputDialog;
-        }
+        return Messages.showInputDialog(DiffHelperBundle.message("action.taskName"), DiffHelperBundle.message("action.createNewDiff"), Messages.getQuestionIcon(), defaultListName, INPUT_VALIDATOR);
+    }
+
+    public static String getTicketFromChangelist(Project project) {
+        return ChangeListManager.getInstance(project).getDefaultListName();
     }
 }
