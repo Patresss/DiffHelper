@@ -1,4 +1,4 @@
-package com.patres.idea.diff;
+package com.patres.idea.diff.config;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -21,6 +21,7 @@ public class DiffHelperConfig implements PersistentStateComponent<DiffHelperConf
     public boolean taskNameFromChangelistCheck = false;
     public boolean nickNameFromGitCheck = true;
     public String nickNameFromGit = "";
+    public String diffTemplatePath = "";
 
     public DiffHelperConfig() { }
 
@@ -64,4 +65,11 @@ public class DiffHelperConfig implements PersistentStateComponent<DiffHelperConf
         this.nickNameFromGit = nickNameFromGit;
     }
 
+    public String getDiffTemplatePath() {
+        return diffTemplatePath;
+    }
+
+    public void setDiffTemplatePath(String diffTemplatePath) {
+        this.diffTemplatePath = diffTemplatePath;
+    }
 }

@@ -27,8 +27,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <projectConfigurable groupId="tools" displayName="Diff Helper Plugin" id="preferences.DiffHelperConfigurable" instance="com.patres.idea.diff.DiffHelperConfigurable" />
-    <projectService serviceInterface="com.patres.idea.diff.DiffHelperConfig" serviceImplementation="com.patres.idea.diff.DiffHelperConfig"/>
+    <projectConfigurable groupId="tools" displayName="Diff Helper Plugin" id="preferences.DiffHelperConfigurable" instance="com.patres.idea.diff.config.DiffHelperConfigurable" />
+    <projectService serviceInterface="com.patres.idea.diff.config.DiffHelperConfig" serviceImplementation="com.patres.idea.diff.config.DiffHelperConfig"/>
   </extensions>
 
 

@@ -5,8 +5,8 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.patres.idea.diff.DiffHelperBundle;
-import com.patres.idea.diff.DiffHelperConfig;
-import com.patres.idea.diff.NotEmptyValidator;
+import com.patres.idea.diff.config.DiffHelperConfig;
+import com.patres.idea.diff.validator.NotEmptyValidator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

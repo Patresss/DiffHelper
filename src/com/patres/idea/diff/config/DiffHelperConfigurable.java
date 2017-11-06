@@ -1,4 +1,4 @@
-package com.patres.idea.diff;
+package com.patres.idea.diff.config;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;

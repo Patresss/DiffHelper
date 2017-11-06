@@ -1,4 +1,4 @@
-package com.patres.idea.diff;
+package com.patres.idea.diff.validator;
 
 import com.intellij.openapi.ui.InputValidator;
 
